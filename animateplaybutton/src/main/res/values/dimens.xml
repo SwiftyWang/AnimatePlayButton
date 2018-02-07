@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_button">4dp</dimen>
+    <dimen name="padding_parent">4dp</dimen>
+    <dimen name="width_stroke">2dp</dimen>
+
+    <!--button-style-->
+    <dimen name="size_button">42dp</dimen>
+    <dimen name="padding_button">7dp</dimen>
+</resources>
