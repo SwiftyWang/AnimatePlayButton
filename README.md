@@ -3,6 +3,24 @@ play button animate to pause and stop button
 
 ![Demo GIF](demo/demo.gif)
 
+## Import
+Add it in your root build.gradle at the end of repositories:
+```gradle
+	allprojects {
+		repositories {
+			...
+			maven { url "https://jitpack.io" }
+		}
+	}
+```
+Step 2. Add the dependency
+```gradle
+    dependencies {
+        compile 'com.github.SwiftyWang:AnimatePlayButton:1.3'
+	}
+```
+
+
 ## How to use
 Use it in xml
 ```xml
