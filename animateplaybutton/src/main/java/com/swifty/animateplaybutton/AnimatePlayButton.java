@@ -11,11 +11,14 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import static android.view.View.MeasureSpec.AT_MOST;
 
 /**
  * Created by swifty on 7/2/2018.
@@ -36,7 +39,7 @@ public class AnimatePlayButton extends FrameLayout {
     private ImageView mPause;
     private ImageView mStop;
 
-    private PlayListener mPlayListener;
+    private OnButtonsListener mPlayListener;
 
     public AnimatePlayButton(Context context) {
         this(context, null);
@@ -65,16 +68,28 @@ public class AnimatePlayButton extends FrameLayout {
         a.recycle();
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(getMeasuredWidth(), mButtonSize + getDimens(R.dimen.padding_parent) * 2);
+    }
+
     private void initView() {
         setLayerType(LAYER_TYPE_HARDWARE, null);
+        FrameLayout root = new FrameLayout(getContext());
+        LayoutParams rootParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        rootParams.gravity = Gravity.CENTER;
+        root.setLayoutParams(rootParams);
+        addView(root);
+
         int size = getDimens(R.dimen.padding_parent);
-        setPadding(size, size, size, size);
-        setBackgroundResource(R.drawable.blue_ring);
-        mPauseGroup = inflate(getContext(), R.layout.view_pause_stop, this).findViewById(R.id.pause_group);
-        inflate(getContext(), R.layout.view_play, this);
+        root.setPadding(size, size, size, size);
+        root.setBackgroundResource(R.drawable.blue_ring);
+        mPauseGroup = inflate(getContext(), R.layout.view_pause_stop, root).findViewById(R.id.pause_group);
+        inflate(getContext(), R.layout.view_play, root);
         mPause = mPauseGroup.findViewById(R.id.pause);
         mStop = mPauseGroup.findViewById(R.id.stop);
-        mPlay = findViewById(R.id.play);
+        mPlay = root.findViewById(R.id.play);
 
         //set size
         ViewGroup.LayoutParams mPauseGroupLayoutParams = mPauseGroup.getLayoutParams();
@@ -86,10 +101,10 @@ public class AnimatePlayButton extends FrameLayout {
         mPlayLayoutParams.height = mButtonSize;
         mPlay.setLayoutParams(mPlayLayoutParams);
         //update border
-        GradientDrawable background = (GradientDrawable) getBackground();
+        GradientDrawable background = (GradientDrawable) root.getBackground();
         background.setColorFilter(mBorderColor, PorterDuff.Mode.SRC_ATOP);
         background.setCornerRadius(mButtonSize);
-        setBackgroundDrawable(background);
+        root.setBackgroundDrawable(background);
         //set button background
         mPlay.setBackgroundResource(mButtonBackgroundRes);
         mPause.setBackgroundResource(mButtonBackgroundRes);
@@ -102,27 +117,47 @@ public class AnimatePlayButton extends FrameLayout {
         mPlay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateStatus(Status.PLAYED);
-                if (mPlayListener != null) mPlayListener.onPlay(v);
+                boolean changeStatus = true;
+                if (mPlayListener != null) {
+                    changeStatus = mPlayListener.onPlayClick(v);
+                }
+                if (changeStatus) {
+                    updateStatus(Status.PLAYED);
+                }
             }
         });
         mPause.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mStatus == Status.PAUSED) {
-                    updateStatus(Status.PLAYED);
-                    if (mPlayListener != null) mPlayListener.onResume(v);
+                    boolean changeStatus = true;
+                    if (mPlayListener != null) {
+                        changeStatus = mPlayListener.onResumeClick(v);
+                    }
+                    if (changeStatus) {
+                        updateStatus(Status.PLAYED);
+                    }
                 } else {
-                    updateStatus(Status.PAUSED);
-                    if (mPlayListener != null) mPlayListener.onPause(v);
+                    boolean changeStatus = true;
+                    if (mPlayListener != null) {
+                        changeStatus = mPlayListener.onPauseClick(v);
+                    }
+                    if (changeStatus) {
+                        updateStatus(Status.PAUSED);
+                    }
                 }
             }
         });
         mStop.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateStatus(Status.STOPPED);
-                if (mPlayListener != null) mPlayListener.onStop(v);
+                boolean changeStatus = true;
+                if (mPlayListener != null) {
+                    changeStatus = mPlayListener.onStopClick(v);
+                }
+                if (changeStatus) {
+                    updateStatus(Status.STOPPED);
+                }
             }
         });
         initStatus(Status.STOPPED);
@@ -201,7 +236,6 @@ public class AnimatePlayButton extends FrameLayout {
                 view.setClickable(true);
             }
         });
-        animator.setInterpolator(new OvershootInterpolator());
         animator.start();
     }
 
@@ -226,7 +260,7 @@ public class AnimatePlayButton extends FrameLayout {
     }
 
     private void dismissAnimation(final View view, final int width, final int height) {
-        ValueAnimator animator = ValueAnimator.ofFloat(1, 0).setDuration(mAnimationDuration / 2);
+        ValueAnimator animator = ValueAnimator.ofFloat(1, 0).setDuration(mAnimationDuration / 3);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -259,7 +293,7 @@ public class AnimatePlayButton extends FrameLayout {
         return getContext().getResources().getDimensionPixelSize(dimenRes);
     }
 
-    public void setPlayListener(PlayListener PlayListener) {
+    public void setPlayListener(OnButtonsListener PlayListener) {
         mPlayListener = PlayListener;
     }
 
@@ -267,14 +301,38 @@ public class AnimatePlayButton extends FrameLayout {
         return mStatus;
     }
 
-    public interface PlayListener {
-        void onPlay(View playButton);
+    public interface OnButtonsListener {
+        /**
+         * when click play button will callback this
+         *
+         * @param playButton
+         * @return true will change current status to {@link Status#PLAYED}, false will do nothing
+         */
+        boolean onPlayClick(View playButton);
 
-        void onPause(View pause);
+        /**
+         * when click pause button to pause will callback this
+         *
+         * @param pauseButton
+         * @return true will change current status to {@link Status#PAUSED}, false will do nothing
+         */
+        boolean onPauseClick(View pauseButton);
 
-        void onResume(View pause);
+        /**
+         * when click pause button to resume will callback this
+         *
+         * @param pauseButton
+         * @return true will change current status to {@link Status#PLAYED}, false will do nothing
+         */
+        boolean onResumeClick(View pauseButton);
 
-        void onStop(View stop);
+        /**
+         * when click stop button to stop will callback this
+         *
+         * @param stopButton
+         * @return true will change current status to {@link Status#STOPPED}, false will do nothing
+         */
+        boolean onStopClick(View stopButton);
     }
 
     public enum Status {

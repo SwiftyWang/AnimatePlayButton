@@ -12,42 +12,46 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        first.setPlayListener(object : AnimatePlayButton.PlayListener {
-            override fun onPlay(playButton: View) {
-                Toast.makeText(this@MainActivity, "button 1 play, trigger 2 play", Toast.LENGTH_SHORT).show()
-                second.updateStatus(AnimatePlayButton.Status.PLAYED)
+        first.setPlayListener(object : AnimatePlayButton.OnButtonsListener {
+            override fun onPlayClick(playButton: View): Boolean {
+                Toast.makeText(this@MainActivity, "button 1 play", Toast.LENGTH_SHORT).show()
+                return true
             }
 
-            override fun onPause(pause: View) {
-                Toast.makeText(this@MainActivity, "button 1 pause, trigger 2 pause", Toast.LENGTH_SHORT).show()
-                second.updateStatus(AnimatePlayButton.Status.PAUSED)
+            override fun onPauseClick(pause: View): Boolean {
+                Toast.makeText(this@MainActivity, "button 1 pause", Toast.LENGTH_SHORT).show()
+                return true
             }
 
-            override fun onResume(pause: View) {
-                Toast.makeText(this@MainActivity, "button 1 resume, trigger 2 resume", Toast.LENGTH_SHORT).show()
-                second.updateStatus(AnimatePlayButton.Status.PLAYED)
+            override fun onResumeClick(pause: View): Boolean {
+                Toast.makeText(this@MainActivity, "button 1 resume", Toast.LENGTH_SHORT).show()
+                return true
             }
 
-            override fun onStop(stop: View) {
-                Toast.makeText(this@MainActivity, "button 1 stop, trigger 2 stop", Toast.LENGTH_SHORT).show()
-                second.updateStatus(AnimatePlayButton.Status.STOPPED)
+            override fun onStopClick(stop: View): Boolean {
+                Toast.makeText(this@MainActivity, "button 1 stop", Toast.LENGTH_SHORT).show()
+                return true
             }
         })
-        second.setPlayListener(object : AnimatePlayButton.PlayListener {
-            override fun onPlay(playButton: View) {
+        second.setPlayListener(object : AnimatePlayButton.OnButtonsListener {
+            override fun onPlayClick(playButton: View): Boolean {
                 Toast.makeText(this@MainActivity, "button 2 play", Toast.LENGTH_SHORT).show()
+                return true
             }
 
-            override fun onPause(pause: View) {
+            override fun onPauseClick(pause: View): Boolean {
                 Toast.makeText(this@MainActivity, "button 2 pause", Toast.LENGTH_SHORT).show()
+                return true
             }
 
-            override fun onResume(pause: View) {
+            override fun onResumeClick(pause: View): Boolean {
                 Toast.makeText(this@MainActivity, "button 2 resume", Toast.LENGTH_SHORT).show()
+                return true
             }
 
-            override fun onStop(stop: View) {
+            override fun onStopClick(stop: View): Boolean {
                 Toast.makeText(this@MainActivity, "button 2 stop", Toast.LENGTH_SHORT).show()
+                return true
             }
         })
     }
