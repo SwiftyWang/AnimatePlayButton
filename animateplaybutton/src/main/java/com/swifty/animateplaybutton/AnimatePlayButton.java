@@ -14,11 +14,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import static android.view.View.MeasureSpec.AT_MOST;
 
 /**
  * Created by swifty on 7/2/2018.
@@ -40,6 +37,7 @@ public class AnimatePlayButton extends FrameLayout {
     private ImageView mStop;
 
     private OnButtonsListener mPlayListener;
+    private boolean mUpdatingStatus;
 
     public AnimatePlayButton(Context context) {
         this(context, null);
@@ -117,25 +115,31 @@ public class AnimatePlayButton extends FrameLayout {
         mPlay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mUpdatingStatus) {
+                    return;
+                }
                 boolean changeStatus = true;
                 if (mPlayListener != null) {
                     changeStatus = mPlayListener.onPlayClick(v);
                 }
                 if (changeStatus) {
-                    updateStatus(Status.PLAYED);
+                    updateStatus(Status.PLAYING);
                 }
             }
         });
         mPause.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mUpdatingStatus) {
+                    return;
+                }
                 if (mStatus == Status.PAUSED) {
                     boolean changeStatus = true;
                     if (mPlayListener != null) {
                         changeStatus = mPlayListener.onResumeClick(v);
                     }
                     if (changeStatus) {
-                        updateStatus(Status.PLAYED);
+                        updateStatus(Status.PLAYING);
                     }
                 } else {
                     boolean changeStatus = true;
@@ -151,6 +155,9 @@ public class AnimatePlayButton extends FrameLayout {
         mStop.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mUpdatingStatus) {
+                    return;
+                }
                 boolean changeStatus = true;
                 if (mPlayListener != null) {
                     changeStatus = mPlayListener.onStopClick(v);
@@ -170,7 +177,7 @@ public class AnimatePlayButton extends FrameLayout {
     public void initStatus(Status status) {
         this.mStatus = status;
         switch (status) {
-            case PLAYED:
+            case PLAYING:
                 mPlay.setVisibility(GONE);
                 mPauseGroup.setVisibility(VISIBLE);
                 mPause.setImageResource(R.drawable.ic_pause_white_36dp);
@@ -191,9 +198,12 @@ public class AnimatePlayButton extends FrameLayout {
         if (mStatus == status) {
             return;
         }
+        if (mUpdatingStatus) {
+            return;
+        }
         mStatus = status;
         switch (status) {
-            case PLAYED:
+            case PLAYING:
                 mPause.setImageResource(R.drawable.ic_pause_white_36dp);
                 if (mPlay.getVisibility() == VISIBLE) {
                     dismissAnimation(mPlay, mButtonSize, mButtonSize);
@@ -228,38 +238,18 @@ public class AnimatePlayButton extends FrameLayout {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                disableView(view);
+                mUpdatingStatus = true;
                 view.setVisibility(VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                enableView(view);
+                mUpdatingStatus = false;
                 view.setClickable(true);
             }
         });
         animator.start();
-    }
-
-    private void enableView(View view) {
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                enableView(((ViewGroup) view).getChildAt(i));
-            }
-        } else {
-            view.setEnabled(true);
-        }
-    }
-
-    private void disableView(View view) {
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                disableView(((ViewGroup) view).getChildAt(i));
-            }
-        } else {
-            view.setEnabled(false);
-        }
     }
 
     private void dismissAnimation(final View view, final int width, final int height) {
@@ -279,13 +269,11 @@ public class AnimatePlayButton extends FrameLayout {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                disableView(view);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                enableView(view);
                 view.setVisibility(GONE);
             }
         });
@@ -309,7 +297,7 @@ public class AnimatePlayButton extends FrameLayout {
          * when click play button will callback this
          *
          * @param playButton
-         * @return true will change current status to {@link Status#PLAYED}, false will do nothing
+         * @return true will change current status to {@link Status#PLAYING}, false will do nothing
          */
         boolean onPlayClick(View playButton);
 
@@ -325,7 +313,7 @@ public class AnimatePlayButton extends FrameLayout {
          * when click pause button to resume will callback this
          *
          * @param pauseButton
-         * @return true will change current status to {@link Status#PLAYED}, false will do nothing
+         * @return true will change current status to {@link Status#PLAYING}, false will do nothing
          */
         boolean onResumeClick(View pauseButton);
 
@@ -339,7 +327,7 @@ public class AnimatePlayButton extends FrameLayout {
     }
 
     public enum Status {
-        PLAYED,
+        PLAYING,
         PAUSED,
         STOPPED
     }
