@@ -7,4 +7,6 @@
     <!--button-style-->
     <dimen name="size_button">42dp</dimen>
     <dimen name="padding_button">7dp</dimen>
+    <!--size_button * 2 + margin_button-->
+    <dimen name="size_pause_group_width">88dp</dimen>
 </resources>

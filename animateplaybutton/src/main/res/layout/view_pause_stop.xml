@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
        android:layout_width="wrap_content"
-       android:layout_height="wrap_content">
+       android:layout_height="wrap_content"
+       tools:parentTag="android.widget.FrameLayout">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/pause_group"
+        android:layout_width="@dimen/size_pause_group_width"
+        android:layout_height="@dimen/size_button"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="@dimen/size_button"
-            android:layout_height="@dimen/size_button"
+            android:id="@+id/pause"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/circle_button_bg"
             android:clickable="true"
             android:focusable="true"
@@ -18,10 +25,12 @@
             android:src="@drawable/ic_pause_white_36dp"/>
 
         <ImageView
-            android:layout_width="@dimen/size_button"
-            android:layout_height="@dimen/size_button"
+            android:id="@+id/stop"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/margin_button"
             android:layout_marginStart="@dimen/margin_button"
+            android:layout_weight="1"
             android:background="@drawable/circle_button_bg"
             android:clickable="true"
             android:focusable="true"
