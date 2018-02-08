@@ -188,7 +188,10 @@ public class AnimatePlayButton extends FrameLayout {
     }
 
     public void updateStatus(Status status) {
-        this.mStatus = status;
+        if (mStatus == status) {
+            return;
+        }
+        mStatus = status;
         switch (status) {
             case PLAYED:
                 mPause.setImageResource(R.drawable.ic_pause_white_36dp);
