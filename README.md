@@ -16,7 +16,7 @@ Add it in your root build.gradle at the end of repositories:
 Step 2. Add the dependency
 ```gradle
     dependencies {
-        compile 'com.github.SwiftyWang:AnimatePlayButton:1.3'
+        compile 'com.github.SwiftyWang:AnimatePlayButton:1.4'
 	}
 ```
 
