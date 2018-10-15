@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AnimatePlayButton">
-        <attr name="borderColor" format="reference|color"/>
-        <attr name="buttonBackground" format="reference|color"/>
-        <attr name="buttonSize" format="dimension"/>
-        <attr name="animationDuration" format="integer"/>
-        <attr name="buttonColor" format="reference|color"/>
+        <attr name="ap_border_color" format="reference|color"/>
+        <attr name="ap_button_background" format="reference|color"/>
+        <attr name="ap_button_size" format="dimension"/>
+        <attr name="ap_animation_duration" format="integer"/>
+        <attr name="ap_button_color" format="reference|color"/>
     </declare-styleable>
 </resources>

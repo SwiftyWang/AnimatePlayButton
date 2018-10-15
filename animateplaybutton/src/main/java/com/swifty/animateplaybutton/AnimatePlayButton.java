@@ -58,11 +58,11 @@ public class AnimatePlayButton extends FrameLayout {
             return;
         }
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AnimatePlayButton, defStyleAttr, 0);
-        mAnimationDuration = a.getInt(R.styleable.AnimatePlayButton_animationDuration, DEFAULT_DURATION);
-        mButtonSize = a.getDimensionPixelSize(R.styleable.AnimatePlayButton_buttonSize, getDimens(R.dimen.size_button));
-        mBorderColor = a.getColor(R.styleable.AnimatePlayButton_borderColor, getResources().getColor(android.R.color.holo_blue_bright));
-        mButtonColor = a.getColor(R.styleable.AnimatePlayButton_buttonColor, getResources().getColor(android.R.color.white));
-        mButtonBackgroundRes = a.getResourceId(R.styleable.AnimatePlayButton_buttonBackground, R.drawable.circle_button_bg);
+        mAnimationDuration = a.getInt(R.styleable.AnimatePlayButton_ap_animation_duration, DEFAULT_DURATION);
+        mButtonSize = a.getDimensionPixelSize(R.styleable.AnimatePlayButton_ap_button_size, getDimens(R.dimen.size_button));
+        mBorderColor = a.getColor(R.styleable.AnimatePlayButton_ap_border_color, getResources().getColor(android.R.color.holo_blue_bright));
+        mButtonColor = a.getColor(R.styleable.AnimatePlayButton_ap_button_color, getResources().getColor(android.R.color.white));
+        mButtonBackgroundRes = a.getResourceId(R.styleable.AnimatePlayButton_ap_button_background, R.drawable.circle_button_bg);
         a.recycle();
     }
 
