@@ -27,11 +27,11 @@ Use it in xml
     <com.swifty.animateplaybutton.AnimatePlayButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:animationDuration="250"
-        app:borderColor="@color/colorPrimary"
-        app:buttonBackground="@drawable/circle_primary_bg"
-        app:buttonColor="@android:color/black"
-        app:buttonSize="60dp"/>
+        app:ap_animation_duration="250"
+        app:ap_border_color="@color/colorPrimary"
+        app:ap_button_background="@drawable/circle_primary_bg"
+        app:ap_button_color="@android:color/black"
+        app:ap_button_size="60dp"/>
 
 ```
 Add click listener in Java/Kotlin
@@ -56,10 +56,10 @@ Add click listener in Java/Kotlin
 ```
 
 ## Reference
-| xml attribute     | description                                  | default value                   |
-|-------------------|----------------------------------------------|---------------------------------|
-| animationDuration | the transform animation duration             | 300(300ms)                      |
-| borderColor       | the outside border color                     | @android:color/holo_blue_bright |
-| buttonBackground  | the button's background(need shape drawable) | @drawable/circle_button_bg      |
-| buttonColor       | the button's icon color                      | @android:color/white            |
-| buttonSize        | the button's size                            | 42dp                            |
+| xml attribute         | description                                  | default value                   |
+|-----------------------|----------------------------------------------|---------------------------------|
+| ap_animation_duration | the transform animation duration             | 300(300ms)                      |
+| ap_border_color       | the outside border color                     | @android:color/holo_blue_bright |
+| ap_button_background  | the button's background(need shape drawable) | @drawable/circle_button_bg      |
+| ap_button_color       | the button's icon color                      | @android:color/white            |
+| ap_button_size        | the button's size                            | 42dp                            |
